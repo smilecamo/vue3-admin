@@ -1,6 +1,11 @@
 <template>
   <div class="login-container">
-    <el-form class="login-from" :model="loginData" :rules="loginRules">
+    <el-form
+      class="login-from"
+      ref="loginFromRef"
+      :model="loginData"
+      :rules="loginRules"
+    >
       <div class="title-container">
         <h3 class="title">用户登录</h3>
       </div>
@@ -33,7 +38,11 @@
           </span>
         </span>
       </el-form-item>
-      <el-button type="primary" style="width: 100%; margin-bottom: 30px"
+      <el-button
+        type="primary"
+        style="width: 100%; margin-bottom: 30px"
+        :loading="loading"
+        @click="handleLogin"
         >登录按钮</el-button
       >
     </el-form>
@@ -43,9 +52,10 @@
 <script setup>
 import { validatePassword } from "./rules";
 import { reactive, ref } from "vue";
-const loginData = reactive({
-  username: "super-name",
-  password: 123456,
+import { useStore } from "vuex";
+const loginData = ref({
+  username: "super-admin",
+  password: "123456",
 });
 const loginRules = reactive({
   username: [
@@ -69,6 +79,34 @@ const passwordStatus = ref(true);
 const passwordStatusChange = () => {
   passwordStatus.value = !passwordStatus.value;
 };
+// 初始化 vuex
+const store = useStore();
+// 登录校验 获取ref 节点
+const loginFromRef = ref(null);
+// 登录状态
+const loading = ref(false);
+
+const handleLogin = () => {
+  // 1. 表单验证
+  loginFromRef.value.validate((valid) => {
+    if (!valid) return;
+    loading.value = true;
+    console.log(loginData.value);
+    store
+      .dispatch("user/login", loginData.value)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  });
+  // 2、触发操作
+  // 3. 登录后处理
+};
 </script>
 
 <style lang="scss" scoped>
@@ -89,7 +127,7 @@ $cursor: #fff;
     max-width: 100%;
     padding: 160px 35px 0;
     overflow: hidden;
-    ::v-deep .el-form-item {
+    :deep .el-form-item {
       display: flex;
       align-items: center;
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -109,7 +147,7 @@ $cursor: #fff;
         }
       }
     }
-    ::v-deep ex-input {
+    :deep ex-input {
       display: inline-block;
       height: 47px;
       width: 85%;

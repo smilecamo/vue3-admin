@@ -4,6 +4,8 @@ import ElementPlus from "element-plus";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+// 登录鉴权
+import "./permission";
 // 导入 svgIcon
 import installIcons from "@/icons";
 // 初始化央视
