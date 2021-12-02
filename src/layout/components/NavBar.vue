@@ -1,5 +1,7 @@
 <template>
   <div class="navbar">
+    <hamburger class="hamburger-container" />
+    <breadcrumb class="breadcrumb-container" id="guide-breadcrumb" />
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
@@ -29,6 +31,8 @@
 </template>
 
 <script setup>
+import Hamburger from "@/components/hamburger/index.vue";
+import Breadcrumb from "@/components/Breadcrumb/index.vue";
 import { Setting } from "@element-plus/icons";
 import { useStore } from "vuex";
 const store = useStore();

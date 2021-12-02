@@ -1,5 +1,8 @@
 <template>
-  <div class="app-wrapper">
+  <div
+    class="app-wrapper"
+    :class="[$store.getters.sidebarOpened ? 'openSidebar' : 'hideSidebar']"
+  >
     <!-- 左侧 -->
     <sidebar
       class="sidebar-container"
@@ -8,7 +11,6 @@
     <!-- 导航 -->
     <div class="main-container">
       <div class="fixed-header"><nav-bar></nav-bar></div>
-
       <!-- 内容 -->
       <app-main></app-main>
     </div>
