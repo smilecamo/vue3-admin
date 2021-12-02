@@ -1,17 +1,22 @@
-import { login } from "@/api/sys";
+import { login, getUserInfo } from "@/api/sys";
 import md5 from "md5";
 import router from "@/router/index";
-import { setItem, getItem } from "@/utils/storage";
+import { setItem, getItem, removeAllItem } from "@/utils/storage";
 import { TOKEN } from "@/constant";
+import { setTimeStamp } from "@/utils/auth";
 export default {
   namespaced: true, // 使其成为带命名空间的模块
   state: () => ({
     token: getItem(TOKEN) || "",
+    userInfo: {},
   }),
   mutations: {
     setToken(state, token) {
       state.token = token;
       setItem(TOKEN, token);
+    },
+    setUserInfo(state, info) {
+      state.userInfo = info;
     },
   },
   actions: {
@@ -24,6 +29,7 @@ export default {
         })
           .then((data) => {
             this.commit("user/setToken", data.token);
+            setTimeStamp();
             router.push("/");
             resolve();
           })
@@ -31,6 +37,17 @@ export default {
             reject(err);
           });
       });
+    },
+    logout() {
+      this.commit("user/setToken", "");
+      this.commit("user/setUserInfo", {});
+      removeAllItem();
+      router.push("/login");
+    },
+    async getUserInfo() {
+      const res = await getUserInfo();
+      this.commit("user/setUserInfo", res);
+      return res;
     },
   },
 };

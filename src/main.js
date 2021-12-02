@@ -9,7 +9,7 @@ import "./permission";
 // 导入 svgIcon
 import installIcons from "@/icons";
 // 初始化央视
-import "@/assets/styles/reset.scss";
+import "@/assets/styles/index.scss";
 import "element-plus/dist/index.css";
 const app = createApp(App);
 installIcons(app);
